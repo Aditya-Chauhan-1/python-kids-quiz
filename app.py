@@ -1,4 +1,5 @@
 import streamlit as st
+import streamlit.components.v1 as components
 
 # Page configuration
 st.set_page_config(
@@ -7,21 +8,26 @@ st.set_page_config(
     layout="centered"
 )
 
-# Manage app, footer aur header hide karne ke liye CSS
-hide_elements = """
+# Streamlit UI elements (Header, Footer, Deploy Button) ko hide karne ke liye CSS
+hide_css = """
 <style>
-/* Right side 'Manage app' button hide */
-[data-testid="manage-app-button"] {
+/* Streamlit Cloud Host Badge / Manage Button */
+[data-testid="manage-app-button"],
+.viewerBadge_container__1QSob,
+.viewerBadge_link__1S137,
+[class*="viewerBadge_container"],
+[class*="manage-app"],
+iframe[title="streamlit-badge"] {
     display: none !important;
+    visibility: hidden !important;
+    opacity: 0 !important;
 }
 
-/* Footer aur Streamlit branding hide */
+/* Footer & Status */
 footer {
-    visibility: hidden;
-    height: 0%;
+    display: none !important;
+    visibility: hidden !important;
 }
-
-/* Status widget aur deploy button hide */
 div[data-testid="stStatusWidget"] {
     display: none !important;
 }
@@ -29,36 +35,58 @@ div[data-testid="stStatusWidget"] {
     display: none !important;
 }
 
-/* Top toolbar / header menu hide */
+/* Top Toolbar Header */
 header {
     visibility: hidden !important;
-    height: 0%;
-}
-
-/* Custom styling for card box */
-.quiz-card {
-    background-color: #1e293b;
-    padding: 20px;
-    border-radius: 10px;
-    border: 1px solid #334155;
-    margin-bottom: 20px;
+    height: 0% !important;
 }
 </style>
 """
-st.markdown(hide_elements, unsafe_allow_html=True)
+st.markdown(hide_css, unsafe_allow_html=True)
 
-# Header Section
+# Parent DOM se Manage app button ko actively remove karne ke liye JS
+components.html(
+    """
+    <script>
+    function removeManageBadge() {
+        try {
+            // Parent frame aur local document dono me check karein
+            const targets = [
+                ...window.parent.document.querySelectorAll('[data-testid="manage-app-button"]'),
+                ...window.parent.document.querySelectorAll('[class*="viewerBadge"]'),
+                ...window.parent.document.querySelectorAll('iframe[title="streamlit-badge"]'),
+                ...document.querySelectorAll('[data-testid="manage-app-button"]')
+            ];
+            targets.forEach(el => {
+                if (el) {
+                    el.style.display = 'none';
+                    el.remove();
+                }
+            });
+        } catch (e) {
+            // Cross-origin restriction fallback
+        }
+    }
+    
+    // Page load par aur continuous interval par execute karein
+    window.addEventListener('load', removeManageBadge);
+    setInterval(removeManageBadge, 300);
+    </script>
+    """,
+    height=0,
+    width=0
+)
+
+# App UI
 st.title("🐍 Python Quiz for Kids")
 st.write("Test your Python knowledge!")
 
 st.info("Total Questions: 10 | Each Question: 1 Mark")
 
-# Student Details
 student_name = st.text_input("Student Name", placeholder="Enter your full name")
 
 st.markdown("### 📝 Answer All Questions")
 
-# Questions Data
 questions = [
     {
         "q": "1. Which function displays output in Python?",
@@ -106,13 +134,13 @@ questions = [
         "answer": "=="
     },
     {
-        "q": "10. What will `type(10.5)` return?",
+        "q": "10. What will type(10.5) return?",
         "options": ["<class 'int'>", "<class 'float'>", "<class 'str'>", "<class 'number'>"],
         "answer": "<class 'float'>"
     }
 ]
 
-# Form handling
+# Quiz Form
 with st.form("quiz_form"):
     user_answers = {}
     for i, q_data in enumerate(questions):
@@ -128,7 +156,7 @@ with st.form("quiz_form"):
 
     submitted = st.form_submit_button("Submit Quiz", use_container_width=True)
 
-# Results
+# Evaluation
 if submitted:
     if not student_name.strip():
         st.warning("⚠️ Please enter your name before submitting.")
