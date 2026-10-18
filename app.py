@@ -1,127 +1,144 @@
-
 import streamlit as st
 
+# Page configuration
 st.set_page_config(
     page_title="Python Quiz for Kids",
     page_icon="🐍",
     layout="centered"
 )
 
+# Manage app, footer aur header hide karne ke liye CSS
+hide_elements = """
+<style>
+/* Right side 'Manage app' button hide */
+[data-testid="manage-app-button"] {
+    display: none !important;
+}
+
+/* Footer aur Streamlit branding hide */
+footer {
+    visibility: hidden;
+    height: 0%;
+}
+
+/* Status widget aur deploy button hide */
+div[data-testid="stStatusWidget"] {
+    display: none !important;
+}
+.stAppDeployButton {
+    display: none !important;
+}
+
+/* Top toolbar / header menu hide */
+header {
+    visibility: hidden !important;
+    height: 0%;
+}
+
+/* Custom styling for card box */
+.quiz-card {
+    background-color: #1e293b;
+    padding: 20px;
+    border-radius: 10px;
+    border: 1px solid #334155;
+    margin-bottom: 20px;
+}
+</style>
+"""
+st.markdown(hide_elements, unsafe_allow_html=True)
+
+# Header Section
 st.title("🐍 Python Quiz for Kids")
 st.write("Test your Python knowledge!")
+
 st.info("Total Questions: 10 | Each Question: 1 Mark")
 
+# Student Details
+student_name = st.text_input("Student Name", placeholder="Enter your full name")
+
+st.markdown("### 📝 Answer All Questions")
+
+# Questions Data
 questions = [
     {
-        "question": "1. Which function displays output in Python?",
-        "options": ["input()", "print()", "type()", "int()"],
+        "q": "1. Which function displays output in Python?",
+        "options": ["display()", "print()", "show()", "write()"],
         "answer": "print()"
     },
     {
-        "question": "2. Which symbol is used for comments in Python?",
-        "options": ["//", "<!-- -->", "#", "**"],
+        "q": "2. What is the correct file extension for Python files?",
+        "options": [".pt", ".pyt", ".py", ".python"],
+        "answer": ".py"
+    },
+    {
+        "q": "3. Which of these is a valid variable name in Python?",
+        "options": ["2myvar", "my_var", "my-var", "my var"],
+        "answer": "my_var"
+    },
+    {
+        "q": "4. What is the output of 5 + 2 * 3?",
+        "options": ["21", "11", "16", "25"],
+        "answer": "11"
+    },
+    {
+        "q": "5. Which data type is used to store text in Python?",
+        "options": ["int", "float", "str", "bool"],
+        "answer": "str"
+    },
+    {
+        "q": "6. How do you start a single-line comment in Python?",
+        "options": ["//", "/*", "#", "--"],
         "answer": "#"
     },
     {
-        "question": "3. Which data type stores whole numbers?",
-        "options": ["str", "int", "list", "bool"],
-        "answer": "int"
+        "q": "7. Which collection type is ordered and changeable (mutable)?",
+        "options": ["List", "Tuple", "Set", "Dictionary Keys"],
+        "answer": "List"
     },
     {
-        "question": "4. What is the output of 5 + 3?",
-        "options": ["53", "8", "2", "15"],
-        "answer": "8"
+        "q": "8. What is the keyword used to define a function in Python?",
+        "options": ["func", "def", "function", "define"],
+        "answer": "def"
     },
     {
-        "question": "5. Which keyword checks a condition?",
-        "options": ["for", "print", "if", "def"],
-        "answer": "if"
+        "q": "9. Which operator is used for equal comparison?",
+        "options": ["=", "==", "===", "!="],
+        "answer": "=="
     },
     {
-        "question": "6. Which symbol is used for multiplication?",
-        "options": ["x", "*", "/", "%"],
-        "answer": "*"
-    },
-    {
-        "question": "7. Which data type stores True or False?",
-        "options": ["int", "str", "float", "bool"],
-        "answer": "bool"
-    },
-    {
-        "question": "8. Which loop can repeat code a fixed number of times?",
-        "options": ["for", "print", "input", "if"],
-        "answer": "for"
-    },
-    {
-        "question": "9. Which function takes input from the user?",
-        "options": ["print()", "input()", "range()", "type()"],
-        "answer": "input()"
-    },
-    {
-        "question": "10. What is the output of 10 // 3?",
-        "options": ["3", "3.33", "1", "0"],
-        "answer": "3"
+        "q": "10. What will `type(10.5)` return?",
+        "options": ["<class 'int'>", "<class 'float'>", "<class 'str'>", "<class 'number'>"],
+        "answer": "<class 'float'>"
     }
 ]
 
-with st.form("python_quiz_form"):
-    name = st.text_input("Student Name")
-
-    st.subheader("📝 Answer All Questions")
-
-    answers = []
-
-    for q in questions:
-        st.write("---")
-        st.write(q["question"])
-
-        selected = st.radio(
-            "Choose your answer:",
-            q["options"],
+# Form handling
+with st.form("quiz_form"):
+    user_answers = {}
+    for i, q_data in enumerate(questions):
+        st.write(f"**{q_data['q']}**")
+        user_answers[i] = st.radio(
+            label=f"Options for question {i+1}",
+            options=q_data["options"],
             index=None,
-            key=q["question"]
+            key=f"q_{i}",
+            label_visibility="collapsed"
         )
-        answers.append(selected)
+        st.write("---")
 
-    submitted = st.form_submit_button(
-        "Submit Quiz",
-        type="primary",
-        use_container_width=True
-    )
+    submitted = st.form_submit_button("Submit Quiz", use_container_width=True)
 
+# Results
 if submitted:
-    if not name.strip():
-        st.warning("Please enter your name.")
-    elif any(answer is None for answer in answers):
-        st.warning("Please answer all 10 questions.")
+    if not student_name.strip():
+        st.warning("⚠️ Please enter your name before submitting.")
     else:
-        score = sum(
-            1 for i, q in enumerate(questions)
-            if answers[i] == q["answer"]
-        )
+        score = 0
+        for i, q_data in enumerate(questions):
+            if user_answers.get(i) == q_data["answer"]:
+                score += 1
 
-        percentage = score * 10
-
-        st.success("Quiz submitted successfully!")
-
-        st.subheader(f"🎉 Well done, {name}!")
-
-        col1, col2 = st.columns(2)
-        col1.metric("Your Score", f"{score}/10")
-        col2.metric("Percentage", f"{percentage}%")
-
+        st.success(f"🎉 Well done, {student_name}! You scored **{score} / {len(questions)}**")
+        
         if score >= 8:
             st.balloons()
-            st.success("Excellent! You are a Python Star! 🌟")
-        elif score >= 5:
-            st.info("Good job! Keep practicing! 👍")
-        else:
-            st.warning("Keep learning. You can do it! 💪")
-
-        with st.expander("📖 View Correct Answers"):
-            for i, q in enumerate(questions):
-                st.write(f"**{i+1}. {q['question']}**")
-                st.write(f"Your answer: {answers[i]}")
-                st.write(f"Correct answer: {q['answer']}")
-
-        st.caption("Thank you for taking the Python Quiz!")
