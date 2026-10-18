@@ -1,92 +1,97 @@
 import streamlit as st
 import streamlit.components.v1 as components
 
-# Page configuration
+# Page config
 st.set_page_config(
     page_title="Python Quiz for Kids",
     page_icon="🐍",
     layout="centered"
 )
 
-# Streamlit UI elements (Header, Footer, Deploy Button) ko hide karne ke liye CSS
-hide_css = """
-<style>
-/* Streamlit Cloud Host Badge / Manage Button */
-[data-testid="manage-app-button"],
-.viewerBadge_container__1QSob,
-.viewerBadge_link__1S137,
-[class*="viewerBadge_container"],
-[class*="manage-app"],
-iframe[title="streamlit-badge"] {
-    display: none !important;
-    visibility: hidden !important;
-    opacity: 0 !important;
-}
+# CSS injection to hide local widgets, headers, and badges
+st.markdown(
+    """
+    <style>
+    /* Hide header toolbar, footer, and status icons */
+    header {visibility: hidden !important; height: 0% !important;}
+    footer {visibility: hidden !important; display: none !important;}
+    div[data-testid="stStatusWidget"] {display: none !important;}
+    .stAppDeployButton {display: none !important;}
+    
+    /* Target Manage app containers */
+    [data-testid="manage-app-button"],
+    [class*="viewerBadge"],
+    [class*="manageApp"],
+    iframe[title="streamlit-badge"] {
+        display: none !important;
+        visibility: hidden !important;
+        opacity: 0 !important;
+        pointer-events: none !important;
+    }
+    </style>
+    """,
+    unsafe_allow_html=True
+)
 
-/* Footer & Status */
-footer {
-    display: none !important;
-    visibility: hidden !important;
-}
-div[data-testid="stStatusWidget"] {
-    display: none !important;
-}
-.stAppDeployButton {
-    display: none !important;
-}
-
-/* Top Toolbar Header */
-header {
-    visibility: hidden !important;
-    height: 0% !important;
-}
-</style>
-"""
-st.markdown(hide_css, unsafe_allow_html=True)
-
-# Parent DOM se Manage app button ko actively remove karne ke liye JS
+# Cross-Frame JavaScript injection to find and remove the Manage app element from parent DOM
 components.html(
     """
     <script>
-    function removeManageBadge() {
+    function removeElements() {
         try {
-            // Parent frame aur local document dono me check karein
-            const targets = [
-                ...window.parent.document.querySelectorAll('[data-testid="manage-app-button"]'),
-                ...window.parent.document.querySelectorAll('[class*="viewerBadge"]'),
-                ...window.parent.document.querySelectorAll('iframe[title="streamlit-badge"]'),
-                ...document.querySelectorAll('[data-testid="manage-app-button"]')
-            ];
+            const doc = window.parent.document;
+            
+            // Query known button attributes and tags
+            const targets = doc.querySelectorAll([
+                '[data-testid="manage-app-button"]',
+                'div[class*="viewerBadge"]',
+                'div[class*="manageApp"]',
+                'iframe[title="streamlit-badge"]',
+                'footer'
+            ].join(','));
+            
             targets.forEach(el => {
                 if (el) {
-                    el.style.display = 'none';
+                    el.style.setProperty('display', 'none', 'important');
                     el.remove();
                 }
             });
+
+            // Fallback: search all fixed position elements containing 'Manage app' text
+            const allElements = doc.querySelectorAll('button, div, span');
+            allElements.forEach(el => {
+                if (el.innerText && el.innerText.trim() === "Manage app") {
+                    const container = el.closest('div[style*="fixed"]') || el;
+                    container.style.setProperty('display', 'none', 'important');
+                    container.remove();
+                }
+            });
         } catch (e) {
-            // Cross-origin restriction fallback
+            // Silently pass if browser blocks cross-frame access
         }
     }
-    
-    // Page load par aur continuous interval par execute karein
-    window.addEventListener('load', removeManageBadge);
-    setInterval(removeManageBadge, 300);
+
+    // Run immediately and periodically
+    removeElements();
+    setInterval(removeElements, 150);
     </script>
     """,
     height=0,
     width=0
 )
 
-# App UI
+# Title & Description
 st.title("🐍 Python Quiz for Kids")
 st.write("Test your Python knowledge!")
 
 st.info("Total Questions: 10 | Each Question: 1 Mark")
 
+# Student Details
 student_name = st.text_input("Student Name", placeholder="Enter your full name")
 
 st.markdown("### 📝 Answer All Questions")
 
+# Quiz questions list
 questions = [
     {
         "q": "1. Which function displays output in Python?",
@@ -156,7 +161,7 @@ with st.form("quiz_form"):
 
     submitted = st.form_submit_button("Submit Quiz", use_container_width=True)
 
-# Evaluation
+# Result calculation
 if submitted:
     if not student_name.strip():
         st.warning("⚠️ Please enter your name before submitting.")
