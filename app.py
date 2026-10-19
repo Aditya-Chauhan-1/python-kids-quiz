@@ -157,7 +157,8 @@ div[data-testid="stRadio"] > div[role="radiogroup"] {
     width: 100%;
 }
 
-div[data-testid="stRadio"] label[data-baseweb="radio"] {
+/* Option card border aur white background */
+div[data-testid="stRadio"] label {
     background: #ffffff !important;
     border: 1.5px solid #cbd5e1 !important;
     border-radius: 12px !important;
@@ -168,28 +169,23 @@ div[data-testid="stRadio"] label[data-baseweb="radio"] {
     align-items: center !important;
     cursor: pointer !important;
     transition: all 0.2s ease !important;
+    box-shadow: 0 2px 6px rgba(15, 23, 42, 0.04) !important;
 }
 
-div[data-testid="stRadio"] label[data-baseweb="radio"]:hover {
+div[data-testid="stRadio"] label:hover {
     background: #eff6ff !important;
     border-color: #3b82f6 !important;
+    transform: translateX(3px);
 }
 
-/* Ensure text is clearly visible and dark */
-div[data-testid="stRadio"] label[data-baseweb="radio"] div,
-div[data-testid="stRadio"] label[data-baseweb="radio"] p,
-div[data-testid="stRadio"] label[data-baseweb="radio"] span {
+/* Text visibility fix - options bilkul clear aur dark dikhenge */
+div[data-testid="stRadio"] label *,
+div[data-testid="stRadio"] [data-testid="stMarkdownContainer"] p {
     color: #0f172a !important;
     font-size: 15px !important;
     font-weight: 600 !important;
     opacity: 1 !important;
     visibility: visible !important;
-}
-
-div[data-testid="stRadio"] label:hover {
-    background: #f1f5f9;
-    border-color: #3b82f6;
-    transform: translateX(3px);
 }
 
 /* Text input */
