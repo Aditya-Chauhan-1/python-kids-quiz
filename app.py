@@ -1,9 +1,8 @@
-
 import streamlit as st
 
 st.set_page_config(
-    page_title="Python Quiz for Kids",
-    page_icon="🐍",
+    page_title="Python Champions Quiz",
+    page_icon="https://www.python.org/static/favicon.ico",
     layout="centered",
     initial_sidebar_state="collapsed"
 )
@@ -11,14 +10,11 @@ st.set_page_config(
 # ---------------- CUSTOM CSS ----------------
 st.markdown("""
 <style>
-@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Fira+Code:wght@400;600&display=swap');
 
-.stApp {
-    background: linear-gradient(135deg, #eef2ff 0%, #f5f3ff 50%, #ecfeff 100%);
-}
-
-html, body, [class*="css"] {
-    font-family: 'Poppins', sans-serif;
+html, body, [class*="css"], .stApp {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    background: radial-gradient(circle at top, #eef2ff 0%, #f8fafc 100%);
 }
 
 #MainMenu, footer, header,
@@ -31,378 +27,407 @@ html, body, [class*="css"] {
 }
 
 .block-container {
-    max-width: 850px;
-    padding-top: 2rem;
+    max-width: 820px;
+    padding-top: 1.5rem;
     padding-bottom: 3rem;
 }
 
-.hero {
-    background: linear-gradient(135deg, #312e81, #4f46e5, #0891b2);
-    padding: 35px 25px;
-    border-radius: 24px;
+/* Hero Card */
+.hero-card {
+    background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    border-radius: 28px;
+    padding: 36px 24px;
     text-align: center;
     color: white;
-    box-shadow: 0 12px 30px rgba(79,70,229,0.22);
-    margin-bottom: 22px;
+    box-shadow: 0 20px 40px rgba(15, 23, 42, 0.18);
+    margin-bottom: 24px;
+    position: relative;
+    overflow: hidden;
 }
 
-.hero h1 {
-    color: white;
-    font-size: clamp(27px, 5vw, 42px);
+.python-logo-wrapper {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 84px;
+    height: 84px;
+    background: rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.18);
+    border-radius: 24px;
+    backdrop-filter: blur(10px);
+    margin-bottom: 12px;
+}
+
+.python-logo-img {
+    width: 52px;
+    height: 52px;
+    filter: drop-shadow(0 4px 10px rgba(0,0,0,0.3));
+}
+
+.badge-tag {
+    display: inline-block;
+    background: linear-gradient(90deg, #38bdf8, #818cf8);
+    color: #0f172a;
+    padding: 6px 16px;
+    border-radius: 999px;
+    font-size: 12px;
+    font-weight: 800;
+    letter-spacing: 0.5px;
+    margin-bottom: 12px;
+}
+
+.hero-card h1 {
+    font-size: clamp(28px, 4vw, 40px);
     font-weight: 800;
     margin: 8px 0;
+    background: linear-gradient(120deg, #ffffff 40%, #93c5fd);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
 }
 
-.hero p {
-    color: #e0e7ff;
+.hero-card p {
+    color: #94a3b8;
     font-size: 15px;
     margin-bottom: 0;
 }
 
-.hero-icon {
-    font-size: 46px;
+/* Stat bar */
+.quiz-meta-bar {
+    display: flex;
+    justify-content: space-around;
+    background: white;
+    border: 1px solid #e2e8f0;
+    border-radius: 20px;
+    padding: 16px;
+    margin-bottom: 24px;
+    box-shadow: 0 6px 20px rgba(15, 23, 42, 0.03);
 }
 
-.badge {
-    display: inline-block;
-    background: rgba(255,255,255,0.17);
-    border: 1px solid rgba(255,255,255,0.25);
-    padding: 6px 14px;
-    border-radius: 30px;
+.meta-item {
+    text-align: center;
+}
+
+.meta-item .num {
+    font-size: 20px;
+    font-weight: 800;
+    color: #2563eb;
+}
+
+.meta-item .label {
     font-size: 12px;
+    color: #64748b;
     font-weight: 600;
 }
 
-.info-card {
+/* Question Box */
+.q-box {
     background: white;
-    padding: 17px;
-    border-radius: 16px;
-    border: 1px solid #e0e7ff;
-    box-shadow: 0 5px 15px rgba(30,41,59,0.05);
-    text-align: center;
-    margin-bottom: 22px;
-}
-
-.info-card h3 {
-    color: #4338ca;
-    font-size: 22px;
-    margin: 0;
-}
-
-.info-card p {
-    color: #64748b;
-    font-size: 12px;
-    margin: 3px 0 0;
-}
-
-.section-title {
-    color: #312e81;
-    font-size: 22px;
-    font-weight: 800;
-    margin: 20px 0 8px;
-}
-
-.question-card {
-    background: white;
-    padding: 18px 20px;
     border: 1px solid #e2e8f0;
-    border-radius: 17px;
-    margin: 15px 0 8px;
-    box-shadow: 0 5px 16px rgba(15,23,42,0.045);
+    border-radius: 20px;
+    padding: 20px 22px;
+    margin-bottom: 16px;
+    box-shadow: 0 4px 16px rgba(15, 23, 42, 0.03);
+}
+
+.q-badge {
+    display: inline-block;
+    background: #eff6ff;
+    color: #2563eb;
+    border: 1px solid #bfdbfe;
+    padding: 4px 10px;
+    border-radius: 8px;
+    font-size: 12px;
+    font-weight: 700;
+    margin-bottom: 8px;
+}
+
+.q-title {
+    color: #1e293b;
+    font-size: 17px;
+    font-weight: 700;
+    margin: 4px 0 12px;
+}
+
+/* Radio button styles */
+div[data-testid="stRadio"] > div {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
 }
 
 div[data-testid="stRadio"] label {
     background: #f8fafc;
-    border: 1px solid #e2e8f0;
-    border-radius: 10px;
-    padding: 8px 12px;
-    margin: 4px 0;
-    transition: all 0.2s ease;
+    border: 1.5px solid #e2e8f0;
+    border-radius: 12px;
+    padding: 10px 14px;
+    transition: all 0.2s ease-in-out;
 }
 
 div[data-testid="stRadio"] label:hover {
-    background: #eef2ff;
-    border-color: #818cf8;
+    background: #f1f5f9;
+    border-color: #3b82f6;
+    transform: translateX(3px);
 }
 
+/* Text input */
 .stTextInput input {
-    border-radius: 12px;
-    border: 1px solid #c7d2fe;
-    padding: 12px;
+    border-radius: 14px;
+    border: 1.5px solid #cbd5e1;
+    padding: 12px 14px;
+    font-size: 15px;
 }
 
 .stTextInput input:focus {
-    border-color: #6366f1;
-    box-shadow: 0 0 0 2px #c7d2fe;
+    border-color: #3b82f6;
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15);
 }
 
+/* Buttons */
 .stButton button,
 .stFormSubmitButton button {
-    background: linear-gradient(135deg, #4f46e5, #7c3aed);
+    background: linear-gradient(135deg, #2563eb 0%, #4f46e5 100%);
     color: white !important;
     border: none;
-    border-radius: 12px;
-    padding: 12px;
+    border-radius: 14px;
+    padding: 14px;
+    font-size: 16px;
     font-weight: 700;
-    min-height: 48px;
-    transition: 0.2s ease;
+    min-height: 52px;
+    box-shadow: 0 10px 20px rgba(37, 99, 235, 0.25);
+    transition: transform 0.15s ease;
 }
 
 .stButton button:hover,
 .stFormSubmitButton button:hover {
-    background: linear-gradient(135deg, #4338ca, #6d28d9);
-    transform: translateY(-1px);
+    transform: translateY(-2px);
+    box-shadow: 0 14px 26px rgba(37, 99, 235, 0.35);
 }
 
-.result-card {
-    background: white;
-    border: 1px solid #c7d2fe;
-    border-radius: 22px;
-    padding: 25px;
-    text-align: center;
-    box-shadow: 0 8px 25px rgba(79,70,229,0.12);
-    margin-top: 25px;
-}
-
-.result-card h2 {
-    color: #312e81;
-}
-
-.footer-text {
-    text-align: center;
-    color: #64748b;
-    font-size: 12px;
-    margin-top: 30px;
-}
-
-@media (max-width: 600px) {
-    .block-container {
-        padding: 1rem 0.8rem 2rem;
-    }
-
-    .hero {
-        padding: 25px 15px;
-        border-radius: 18px;
-    }
-
-    .question-card {
-        padding: 14px;
-    }
+.popup-score-badge {
+    font-size: 42px;
+    font-weight: 800;
+    color: #2563eb;
+    margin: 8px 0;
 }
 </style>
 """, unsafe_allow_html=True)
 
-# ---------------- HERO HEADER ----------------
+# ---------------- HERO HEADER (WITH PYTHON LOGO) ----------------
 st.markdown("""
-<div class="hero">
-    <div class="badge">✨ LEARN • THINK • CODE</div>
-    <div class="hero-icon">🐍</div>
-    <h1>Python Quiz for Kids</h1>
-    <p>Challenge your coding skills and become a Python Star!</p>
+<div class="hero-card">
+    <div class="badge-tag">⚡ CODING CHALLENGE FOR JUNIOR PROS</div>
+    <br>
+    <div class="python-logo-wrapper">
+        <img class="python-logo-img" 
+             src="https://upload.wikimedia.org/wikipedia/commons/c/c3/Python-logo-notext.svg" 
+             alt="Python Official Logo">
+    </div>
+    <h1>Python Star Quiz</h1>
+    <p>Loops, Conditions, Dictionaries, Lists & Functions — Let's check your coding powers!</p>
 </div>
 """, unsafe_allow_html=True)
 
-# ---------------- QUIZ INFORMATION ----------------
+# ---------------- QUIZ META BAR ----------------
 st.markdown("""
-<div class="info-card">
-    <h3>🎯 Your Coding Challenge</h3>
-    <p>10 Questions &nbsp; • &nbsp; 10 Marks &nbsp; • &nbsp; Beginner Level</p>
+<div class="quiz-meta-bar">
+    <div class="meta-item">
+        <div class="num">10</div>
+        <div class="label">Questions</div>
+    </div>
+    <div class="meta-item">
+        <div class="num">10</div>
+        <div class="label">Total Points</div>
+    </div>
+    <div class="meta-item">
+        <div class="num">Kids & Beginners</div>
+        <div class="label">Level</div>
+    </div>
 </div>
 """, unsafe_allow_html=True)
 
 # ---------------- STUDENT DETAILS ----------------
-st.markdown('<div class="section-title">👨‍🎓 Student Details</div>',
-            unsafe_allow_html=True)
-
 student_name = st.text_input(
-    "Your Name",
-    placeholder="Enter your full name",
+    "Coder Name",
+    placeholder="Type your name here...",
     key="student_name"
 )
 
-# ---------------- QUESTIONS ----------------
+# ---------------- QUESTIONS LIST ----------------
 questions = [
     {
-        "q": "Which function displays output in Python?",
-        "options": ["display()", "print()", "show()", "write()"],
-        "answer": "print()"
+        "q": "What will be the output of this code?",
+        "code": "nums = [10, 20, 30]\nprint(nums[1])",
+        "options": ["10", "20", "30", "IndexError"],
+        "answer": "20",
+        "topic": "List Indexing"
     },
     {
-        "q": "What is the correct file extension for Python files?",
-        "options": [".pt", ".pyt", ".py", ".python"],
-        "answer": ".py"
+        "q": "How many times will this `for` loop print 'Python'?",
+        "code": "for i in range(3):\n    print('Python')",
+        "options": ["2 times", "3 times", "4 times", "Infinite"],
+        "answer": "3 times",
+        "topic": "For Loop"
     },
     {
-        "q": "Which of these is a valid variable name in Python?",
-        "options": ["2myvar", "my_var", "my-var", "my var"],
-        "answer": "my_var"
+        "q": "What will this condition print?",
+        "code": "age = 10\nif age >= 12:\n    print('Teen')\nelse:\n    print('Kid')",
+        "options": ["Teen", "Kid", "10", "Error"],
+        "answer": "Kid",
+        "topic": "If-Else Condition"
     },
     {
-        "q": "What is the output of 5 + 2 * 3?",
-        "options": ["21", "11", "16", "25"],
-        "answer": "11"
+        "q": "What value will be printed from this dictionary?",
+        "code": "student = {'name': 'Aarav', 'marks': 95}\nprint(student['marks'])",
+        "options": ["name", "Aarav", "95", "{'marks': 95}"],
+        "answer": "95",
+        "topic": "Dictionary"
     },
     {
-        "q": "Which data type is used to store text in Python?",
-        "options": ["int", "float", "str", "bool"],
-        "answer": "str"
+        "q": "What is the output of this function call?",
+        "code": "def add(a, b):\n    return a + b\n\nprint(add(4, 5))",
+        "options": ["9", "45", "None", "Error"],
+        "answer": "9",
+        "topic": "Functions"
     },
     {
-        "q": "How do you start a single-line comment in Python?",
-        "options": ["//", "/*", "#", "--"],
-        "answer": "#"
+        "q": "What will be printed when this while loop terminates?",
+        "code": "count = 1\nwhile count < 3:\n    count += 1\nprint(count)",
+        "options": ["1", "2", "3", "4"],
+        "answer": "3",
+        "topic": "While Loop"
     },
     {
-        "q": "Which collection type is ordered and changeable (mutable)?",
-        "options": ["List", "Tuple", "Set", "Dictionary Keys"],
-        "answer": "List"
+        "q": "Which method adds a new item to the end of a list?",
+        "code": "fruits = ['apple', 'banana']\n# Add 'mango' to list",
+        "options": ["fruits.add('mango')", "fruits.append('mango')", "fruits.push('mango')", "fruits.insert_end('mango')"],
+        "answer": "fruits.append('mango')",
+        "topic": "List Methods"
     },
     {
-        "q": "Which keyword is used to define a function in Python?",
-        "options": ["func", "def", "function", "define"],
-        "answer": "def"
+        "q": "What will this dictionary operation display?",
+        "code": "scores = {'math': 90}\nscores['science'] = 85\nprint(len(scores))",
+        "options": ["1", "2", "85", "175"],
+        "answer": "2",
+        "topic": "Dictionary Mutability"
     },
     {
-        "q": "Which operator is used for equality comparison?",
-        "options": ["=", "==", "===", "!="],
-        "answer": "=="
+        "q": "What will this loop with range() print?",
+        "code": "total = 0\nfor x in [1, 2, 3]:\n    total = total + x\nprint(total)",
+        "options": ["3", "5", "6", "123"],
+        "answer": "6",
+        "topic": "Accumulator Pattern"
     },
     {
-        "q": "What will type(10.5) return?",
-        "options": [
-            "<class 'int'>",
-            "<class 'float'>",
-            "<class 'str'>",
-            "<class 'number'>"
-        ],
-        "answer": "<class 'float'>"
+        "q": "What does this function print?",
+        "code": "def greet(name='Coder'):\n    print('Hello ' + name)\n\ngreet()",
+        "options": ["Hello", "Hello name", "Hello Coder", "Error"],
+        "answer": "Hello Coder",
+        "topic": "Default Arguments"
     }
 ]
 
-st.markdown('<div class="section-title">📝 Answer All Questions</div>',
-            unsafe_allow_html=True)
+# ---------------- RESULT POPUP DIALOG ----------------
+@st.dialog("🎯 Quiz Results Summary", width="large")
+def show_result_popup(name, score, total_q, answers_map):
+    pct = (score / total_q) * 100
 
-st.caption("Choose one correct answer for each question.")
+    if score >= 9:
+        badge_icon = "🏆"
+        title = "Python Superstar!"
+        note = "Sensational performance! You have nailed all the core concepts."
+    elif score >= 7:
+        badge_icon = "🌟"
+        title = "Great Job, Young Coder!"
+        note = "Super impressive! With just a bit more practice, you'll be unstoppable."
+    elif score >= 5:
+        badge_icon = "🚀"
+        title = "Good Attempt!"
+        note = "You know your basics well! Keep practicing loops and dictionaries."
+    else:
+        badge_icon = "💡"
+        title = "Keep Practicing!"
+        note = "Don't give up! Go through the review section below to master these questions."
 
-# ---------------- QUIZ FORM ----------------
-with st.form("python_quiz_form"):
-    user_answers = {}
-
-    for i, q_data in enumerate(questions):
-        st.markdown(
-            f'<div class="question-card">'
-            f'<strong style="color:#4f46e5;">QUESTION {i+1:02d} / 10</strong>'
-            f'<p style="color:#1e293b;font-size:16px;font-weight:600;'
-            f'margin:10px 0 0;">{q_data["q"]}</p></div>',
-            unsafe_allow_html=True
-        )
-
-        user_answers[i] = st.radio(
-            f"Choose your answer for question {i+1}",
-            options=q_data["options"],
-            index=None,
-            key=f"answer_{i}",
-            label_visibility="collapsed"
-        )
-
-    submitted = st.form_submit_button(
-        "🚀 Submit My Quiz",
-        use_container_width=True
+    st.markdown(
+        f"""
+        <div style="text-align: center; padding: 10px 0;">
+            <div style="font-size: 50px;">{badge_icon}</div>
+            <h2 style="color: #1e293b; margin: 4px 0;">{title}</h2>
+            <p style="color: #64748b; font-size: 15px;">Congratulations, <b>{name}</b>!</p>
+            <div class="popup-score-badge">{score} / {total_q}</div>
+            <p style="font-weight: 700; color: #0284c7; font-size: 16px;">Accuracy: {pct:.0f}%</p>
+            <p style="color: #475569; font-size: 14px; max-width: 480px; margin: 0 auto 16px;">{note}</p>
+        </div>
+        """,
+        unsafe_allow_html=True
     )
 
-# ---------------- RESULTS ----------------
+    c1, c2 = st.columns(2)
+    c1.metric("Correct Answers", f"{score}")
+    c2.metric("Mistakes", f"{total_q - score}")
+
+    st.markdown("---")
+    st.markdown("### 🔍 Answer Review")
+
+    for i, q in enumerate(questions):
+        user_choice = answers_map[i]
+        is_correct = (user_choice == q["answer"])
+        status = "✅ Correct" if is_correct else "❌ Incorrect"
+        
+        with st.expander(f"Q{i+1}: {q['topic']} — {status}"):
+            if q["code"]:
+                st.code(q["code"], language="python")
+            st.markdown(f"**Your Choice:** `{user_choice}`")
+            if not is_correct:
+                st.markdown(f"**Correct Answer:** `{q['answer']}`")
+
+    if st.button("Close & Continue", use_container_width=True):
+        st.rerun()
+
+# ---------------- MAIN QUIZ FORM ----------------
+with st.form("quiz_form"):
+    answers = {}
+
+    for i, q_data in enumerate(questions):
+        st.markdown(f"""
+        <div class="q-box">
+            <span class="q-badge">Question {i+1} of 10 • {q_data['topic']}</span>
+            <div class="q-title">{q_data['q']}</div>
+        </div>
+        """, unsafe_allow_html=True)
+
+        if q_data["code"]:
+            st.code(q_data["code"], language="python")
+
+        answers[i] = st.radio(
+            label=f"Options for question {i+1}",
+            options=q_data["options"],
+            index=None,
+            key=f"q_radio_{i}",
+            label_visibility="collapsed"
+        )
+        st.write("")
+
+    submitted = st.form_submit_button("🚀 Submit Quiz & View Result", use_container_width=True)
+
+# ---------------- FORM PROCESSING ----------------
 if submitted:
     if not student_name.strip():
-        st.warning("⚠️ Please enter your name before submitting.")
-
-    elif any(user_answers[i] is None for i in range(len(questions))):
-        unanswered = sum(
-            1 for i in range(len(questions))
-            if user_answers[i] is None
-        )
-        st.warning(
-            f"📝 You still have {unanswered} unanswered question(s). "
-            "Please answer all questions."
-        )
-
+        st.error("⚠️ Please enter your name at the top before submitting.")
+    elif any(answers[i] is None for i in range(len(questions))):
+        unanswered = sum(1 for i in range(len(questions)) if answers[i] is None)
+        st.warning(f"⚠️ You still have {unanswered} question(s) left. Attempt all before finishing!")
     else:
-        score = sum(
-            1 for i, q_data in enumerate(questions)
-            if user_answers[i] == q_data["answer"]
-        )
-
-        percentage = (score / len(questions)) * 100
-
-        if score >= 9:
-            emoji = "🏆"
-            result_title = "Python Champion!"
-            message = "Outstanding! You are a Python superstar!"
-        elif score >= 7:
-            emoji = "🌟"
-            result_title = "Excellent Work!"
-            message = "Great job! Keep practicing to master Python."
-        elif score >= 5:
-            emoji = "👏"
-            result_title = "Good Effort!"
-            message = "You are learning! Practice a little more."
-        else:
-            emoji = "💪"
-            result_title = "Keep Learning!"
-            message = "Don't give up. Learn, practice, and try again!"
-
-        st.markdown(
-            f"""
-            <div class="result-card">
-                <div style="font-size:55px;">{emoji}</div>
-                <h2>{result_title}</h2>
-                <p style="color:#64748b;">Well done, {student_name.strip()}!</p>
-                <p style="font-size:48px;font-weight:800;color:#4f46e5;
-                margin:8px 0;">{score} / {len(questions)}</p>
-                <p style="font-size:18px;font-weight:600;color:#0891b2;">
-                {percentage:.0f}% Score</p>
-                <p style="color:#475569;">{message}</p>
-            </div>
-            """,
-            unsafe_allow_html=True
-        )
-
-        col1, col2 = st.columns(2)
-
-        with col1:
-            st.metric("Correct Answers", f"{score}/10")
-
-        with col2:
-            st.metric("Incorrect Answers", f"{10-score}/10")
-
-        st.progress(percentage / 100)
-
-        with st.expander("📚 Review Your Answers"):
-            for i, q_data in enumerate(questions):
-                selected = user_answers[i]
-                correct = q_data["answer"]
-
-                if selected == correct:
-                    st.success(
-                        f"Q{i+1}. {q_data['q']}\n\n"
-                        f"Your answer: {selected} ✓"
-                    )
-                else:
-                    st.error(
-                        f"Q{i+1}. {q_data['q']}\n\n"
-                        f"Your answer: {selected}\n\n"
-                        f"Correct answer: {correct}"
-                    )
-
-        if score >= 8:
+        final_score = sum(1 for i, q in enumerate(questions) if answers[i] == q["answer"])
+        if final_score >= 8:
             st.balloons()
-
-        if st.button("🔄 Try Again", use_container_width=True):
-            st.rerun()
+        # Open Modal Dialog Popup
+        show_result_popup(student_name.strip(), final_score, len(questions), answers)
 
 # ---------------- FOOTER ----------------
 st.markdown("""
-<div class="footer-text">
-    💻 Made with Python & Streamlit<br>
-    Keep Learning • Keep Coding • Keep Growing 🚀
+<div style="text-align: center; color: #94a3b8; font-size: 13px; margin-top: 40px;">
+    Crafted for future developers • Built with Python & Streamlit
 </div>
 """, unsafe_allow_html=True)
