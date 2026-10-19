@@ -437,7 +437,7 @@ with st.form("quiz_form"):
             st.code(q_data["code"], language="python")
 
         answers[i] = st.radio(
-            label=f"Options for question {i+1}",
+            label="",
             options=q_data["options"],
             index=None,
             key=f"q_radio_{i}",
