@@ -149,19 +149,41 @@ html, body, [class*="css"], .stApp {
     margin: 4px 0 12px;
 }
 
-/* Radio button styles */
-div[data-testid="stRadio"] > div {
+/* Fix for Radio Buttons and Text Visibility */
+div[data-testid="stRadio"] > div[role="radiogroup"] {
     display: flex;
     flex-direction: column;
-    gap: 8px;
+    gap: 10px;
+    width: 100%;
 }
 
-div[data-testid="stRadio"] label {
-    background: #f8fafc;
-    border: 1.5px solid #e2e8f0;
-    border-radius: 12px;
-    padding: 10px 14px;
-    transition: all 0.2s ease-in-out;
+div[data-testid="stRadio"] label[data-baseweb="radio"] {
+    background: #ffffff !important;
+    border: 1.5px solid #cbd5e1 !important;
+    border-radius: 12px !important;
+    padding: 10px 16px !important;
+    margin: 0 !important;
+    width: 100% !important;
+    display: flex !important;
+    align-items: center !important;
+    cursor: pointer !important;
+    transition: all 0.2s ease !important;
+}
+
+div[data-testid="stRadio"] label[data-baseweb="radio"]:hover {
+    background: #eff6ff !important;
+    border-color: #3b82f6 !important;
+}
+
+/* Ensure text is clearly visible and dark */
+div[data-testid="stRadio"] label[data-baseweb="radio"] div,
+div[data-testid="stRadio"] label[data-baseweb="radio"] p,
+div[data-testid="stRadio"] label[data-baseweb="radio"] span {
+    color: #0f172a !important;
+    font-size: 15px !important;
+    font-weight: 600 !important;
+    opacity: 1 !important;
+    visibility: visible !important;
 }
 
 div[data-testid="stRadio"] label:hover {
