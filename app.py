@@ -42,6 +42,8 @@ html, body, [class*="css"], .stApp {
     color: white;
     box-shadow: 0 20px 40px rgba(15, 23, 42, 0.18);
     margin-bottom: 24px;
+    position: relative;
+    overflow: hidden;
 }
 
 .python-logo-wrapper {
@@ -147,40 +149,25 @@ html, body, [class*="css"], .stApp {
     margin: 4px 0 12px;
 }
 
-/* Radio button styles - FIXED */
-div[data-testid="stRadio"] > div[role="radiogroup"] {
+/* Radio button styles */
+div[data-testid="stRadio"] > div {
     display: flex;
     flex-direction: column;
-    gap: 10px;
-    width: 100%;
+    gap: 8px;
 }
 
-div[data-testid="stRadio"] label[data-baseweb="radio"] {
-    background: #ffffff !important;
-    border: 1.5px solid #cbd5e1 !important;
-    border-radius: 12px !important;
-    padding: 10px 16px !important;
-    margin: 0 !important;
-    width: 100% !important;
-    display: flex !important;
-    align-items: center !important;
-    cursor: pointer !important;
-    transition: all 0.2s ease !important;
+div[data-testid="stRadio"] label {
+    background: #f8fafc;
+    border: 1.5px solid #e2e8f0;
+    border-radius: 12px;
+    padding: 10px 14px;
+    transition: all 0.2s ease-in-out;
 }
 
-div[data-testid="stRadio"] label[data-baseweb="radio"]:hover {
-    background: #eff6ff !important;
-    border-color: #3b82f6 !important;
-}
-
-div[data-testid="stRadio"] label[data-baseweb="radio"] div,
-div[data-testid="stRadio"] label[data-baseweb="radio"] p,
-div[data-testid="stRadio"] label[data-baseweb="radio"] span {
-    color: #0f172a !important;
-    font-size: 15px !important;
-    font-weight: 600 !important;
-    opacity: 1 !important;
-    visibility: visible !important;
+div[data-testid="stRadio"] label:hover {
+    background: #f1f5f9;
+    border-color: #3b82f6;
+    transform: translateX(3px);
 }
 
 /* Text input */
@@ -226,7 +213,7 @@ div[data-testid="stRadio"] label[data-baseweb="radio"] span {
 </style>
 """, unsafe_allow_html=True)
 
-# ---------------- HERO HEADER ----------------
+# ---------------- HERO HEADER (WITH PYTHON LOGO) ----------------
 st.markdown("""
 <div class="hero-card">
     <div class="badge-tag">⚡ CODING CHALLENGE FOR JUNIOR PROS</div>
@@ -279,4 +266,168 @@ questions = [
         "q": "How many times will this `for` loop print 'Python'?",
         "code": "for i in range(3):\n    print('Python')",
         "options": ["2 times", "3 times", "4 times", "Infinite"],
-        "answer":
+        "answer": "3 times",
+        "topic": "For Loop"
+    },
+    {
+        "q": "What will this condition print?",
+        "code": "age = 10\nif age >= 12:\n    print('Teen')\nelse:\n    print('Kid')",
+        "options": ["Teen", "Kid", "10", "Error"],
+        "answer": "Kid",
+        "topic": "If-Else Condition"
+    },
+    {
+        "q": "What value will be printed from this dictionary?",
+        "code": "student = {'name': 'Aarav', 'marks': 95}\nprint(student['marks'])",
+        "options": ["name", "Aarav", "95", "{'marks': 95}"],
+        "answer": "95",
+        "topic": "Dictionary"
+    },
+    {
+        "q": "What is the output of this function call?",
+        "code": "def add(a, b):\n    return a + b\n\nprint(add(4, 5))",
+        "options": ["9", "45", "None", "Error"],
+        "answer": "9",
+        "topic": "Functions"
+    },
+    {
+        "q": "What will be printed when this while loop terminates?",
+        "code": "count = 1\nwhile count < 3:\n    count += 1\nprint(count)",
+        "options": ["1", "2", "3", "4"],
+        "answer": "3",
+        "topic": "While Loop"
+    },
+    {
+        "q": "Which method adds a new item to the end of a list?",
+        "code": "fruits = ['apple', 'banana']\n# Add 'mango' to list",
+        "options": ["fruits.add('mango')", "fruits.append('mango')", "fruits.push('mango')", "fruits.insert_end('mango')"],
+        "answer": "fruits.append('mango')",
+        "topic": "List Methods"
+    },
+    {
+        "q": "What will this dictionary operation display?",
+        "code": "scores = {'math': 90}\nscores['science'] = 85\nprint(len(scores))",
+        "options": ["1", "2", "85", "175"],
+        "answer": "2",
+        "topic": "Dictionary Mutability"
+    },
+    {
+        "q": "What will this loop with range() print?",
+        "code": "total = 0\nfor x in [1, 2, 3]:\n    total = total + x\nprint(total)",
+        "options": ["3", "5", "6", "123"],
+        "answer": "6",
+        "topic": "Accumulator Pattern"
+    },
+    {
+        "q": "What does this function print?",
+        "code": "def greet(name='Coder'):\n    print('Hello ' + name)\n\ngreet()",
+        "options": ["Hello", "Hello name", "Hello Coder", "Error"],
+        "answer": "Hello Coder",
+        "topic": "Default Arguments"
+    }
+]
+
+# ---------------- RESULT POPUP DIALOG ----------------
+@st.dialog("🎯 Quiz Results Summary", width="large")
+def show_result_popup(name, score, total_q, answers_map):
+    pct = (score / total_q) * 100
+
+    if score >= 9:
+        badge_icon = "🏆"
+        title = "Python Superstar!"
+        note = "Sensational performance! You have nailed all the core concepts."
+    elif score >= 7:
+        badge_icon = "🌟"
+        title = "Great Job, Young Coder!"
+        note = "Super impressive! With just a bit more practice, you'll be unstoppable."
+    elif score >= 5:
+        badge_icon = "🚀"
+        title = "Good Attempt!"
+        note = "You know your basics well! Keep practicing loops and dictionaries."
+    else:
+        badge_icon = "💡"
+        title = "Keep Practicing!"
+        note = "Don't give up! Go through the review section below to master these questions."
+
+    st.markdown(
+        f"""
+        <div style="text-align: center; padding: 10px 0;">
+            <div style="font-size: 50px;">{badge_icon}</div>
+            <h2 style="color: #1e293b; margin: 4px 0;">{title}</h2>
+            <p style="color: #64748b; font-size: 15px;">Congratulations, <b>{name}</b>!</p>
+            <div class="popup-score-badge">{score} / {total_q}</div>
+            <p style="font-weight: 700; color: #0284c7; font-size: 16px;">Accuracy: {pct:.0f}%</p>
+            <p style="color: #475569; font-size: 14px; max-width: 480px; margin: 0 auto 16px;">{note}</p>
+        </div>
+        """,
+        unsafe_allow_html=True
+    )
+
+    c1, c2 = st.columns(2)
+    c1.metric("Correct Answers", f"{score}")
+    c2.metric("Mistakes", f"{total_q - score}")
+
+    st.markdown("---")
+    st.markdown("### 🔍 Answer Review")
+
+    for i, q in enumerate(questions):
+        user_choice = answers_map[i]
+        is_correct = (user_choice == q["answer"])
+        status = "✅ Correct" if is_correct else "❌ Incorrect"
+        
+        with st.expander(f"Q{i+1}: {q['topic']} — {status}"):
+            if q["code"]:
+                st.code(q["code"], language="python")
+            st.markdown(f"**Your Choice:** `{user_choice}`")
+            if not is_correct:
+                st.markdown(f"**Correct Answer:** `{q['answer']}`")
+
+    if st.button("Close & Continue", use_container_width=True):
+        st.rerun()
+
+# ---------------- MAIN QUIZ FORM ----------------
+with st.form("quiz_form"):
+    answers = {}
+
+    for i, q_data in enumerate(questions):
+        st.markdown(f"""
+        <div class="q-box">
+            <span class="q-badge">Question {i+1} of 10 • {q_data['topic']}</span>
+            <div class="q-title">{q_data['q']}</div>
+        </div>
+        """, unsafe_allow_html=True)
+
+        if q_data["code"]:
+            st.code(q_data["code"], language="python")
+
+        answers[i] = st.radio(
+            label=f"Options for question {i+1}",
+            options=q_data["options"],
+            index=None,
+            key=f"q_radio_{i}",
+            label_visibility="collapsed"
+        )
+        st.write("")
+
+    submitted = st.form_submit_button("🚀 Submit Quiz & View Result", use_container_width=True)
+
+# ---------------- FORM PROCESSING ----------------
+if submitted:
+    if not student_name.strip():
+        st.error("⚠️ Please enter your name at the top before submitting.")
+    elif any(answers[i] is None for i in range(len(questions))):
+        unanswered = sum(1 for i in range(len(questions)) if answers[i] is None)
+        st.warning(f"⚠️ You still have {unanswered} question(s) left. Attempt all before finishing!")
+    else:
+        final_score = sum(1 for i, q in enumerate(questions) if answers[i] == q["answer"])
+        if final_score >= 8:
+            st.balloons()
+        # Open Modal Dialog Popup
+        show_result_popup(student_name.strip(), final_score, len(questions), answers)
+
+# ---------------- FOOTER ----------------
+st.markdown("""
+<div style="text-align: center; color: #94a3b8; font-size: 13px; margin-top: 40px;">
+    Crafted for future developers • Built with Python & Streamlit
+</div>
+""", unsafe_allow_html=True)
