@@ -156,7 +156,7 @@ html, body, [class*="css"], .stApp {
     margin: 0 0 10px;
 }
 
-/* Radio Option Styling & Text Fix */
+/* Radio Group Layout */
 div[data-testid="stRadio"] > div[role="radiogroup"] {
     display: flex;
     flex-direction: column;
@@ -164,7 +164,13 @@ div[data-testid="stRadio"] > div[role="radiogroup"] {
     width: 100%;
 }
 
-div[data-testid="stRadio"] label {
+/* KHALI UPPER LABEL BOX KO PURA REMOVE KARNE KE LIYE */
+div[data-testid="stRadio"] > label {
+    display: none !important;
+}
+
+/* ONLY OPTION CARDS STYLING */
+div[data-testid="stRadio"] div[role="radiogroup"] label {
     background: #ffffff !important;
     border: 1.5px solid #cbd5e1 !important;
     border-radius: 12px !important;
@@ -178,13 +184,13 @@ div[data-testid="stRadio"] label {
     box-shadow: 0 2px 6px rgba(15, 23, 42, 0.04) !important;
 }
 
-div[data-testid="stRadio"] label:hover {
+div[data-testid="stRadio"] div[role="radiogroup"] label:hover {
     background: #eff6ff !important;
     border-color: #3b82f6 !important;
     transform: translateX(3px);
 }
 
-div[data-testid="stRadio"] label *,
+div[data-testid="stRadio"] div[role="radiogroup"] label *,
 div[data-testid="stRadio"] [data-testid="stMarkdownContainer"] p {
     color: #0f172a !important;
     font-size: 15px !important;
@@ -437,7 +443,7 @@ with st.form("quiz_form"):
             st.code(q_data["code"], language="python")
 
         answers[i] = st.radio(
-            label="",
+            label=f"q_{i}",
             options=q_data["options"],
             index=None,
             key=f"q_radio_{i}",
