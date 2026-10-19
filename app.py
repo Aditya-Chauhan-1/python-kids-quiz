@@ -10,10 +10,10 @@ st.set_page_config(
 # ---------------- CUSTOM CSS ----------------
 st.markdown("""
 <style>
-@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Fira+Code:wght@400;600&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Noto+Sans+Devanagari:wght@400;600;700&display=swap');
 
 html, body, [class*="css"], .stApp {
-    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-family: 'Plus Jakarta Sans', 'Noto Sans Devanagari', sans-serif;
     background: radial-gradient(circle at top, #eef2ff 0%, #f8fafc 100%);
 }
 
@@ -146,10 +146,17 @@ html, body, [class*="css"], .stApp {
     color: #1e293b;
     font-size: 17px;
     font-weight: 700;
-    margin: 4px 0 12px;
+    margin: 4px 0 6px;
 }
 
-/* Fix for Radio Buttons and Text Visibility */
+.q-title-hindi {
+    color: #475569;
+    font-size: 15px;
+    font-weight: 600;
+    margin: 0 0 10px;
+}
+
+/* Radio Option Styling & Text Fix */
 div[data-testid="stRadio"] > div[role="radiogroup"] {
     display: flex;
     flex-direction: column;
@@ -157,12 +164,11 @@ div[data-testid="stRadio"] > div[role="radiogroup"] {
     width: 100%;
 }
 
-/* Option card border aur white background */
 div[data-testid="stRadio"] label {
     background: #ffffff !important;
     border: 1.5px solid #cbd5e1 !important;
     border-radius: 12px !important;
-    padding: 10px 16px !important;
+    padding: 12px 16px !important;
     margin: 0 !important;
     width: 100% !important;
     display: flex !important;
@@ -178,7 +184,6 @@ div[data-testid="stRadio"] label:hover {
     transform: translateX(3px);
 }
 
-/* Text visibility fix - options bilkul clear aur dark dikhenge */
 div[data-testid="stRadio"] label *,
 div[data-testid="stRadio"] [data-testid="stMarkdownContainer"] p {
     color: #0f172a !important;
@@ -188,7 +193,7 @@ div[data-testid="stRadio"] [data-testid="stMarkdownContainer"] p {
     visibility: visible !important;
 }
 
-/* Text input */
+/* Input Fields */
 .stTextInput input {
     border-radius: 14px;
     border: 1.5px solid #cbd5e1;
@@ -201,7 +206,7 @@ div[data-testid="stRadio"] [data-testid="stMarkdownContainer"] p {
     box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15);
 }
 
-/* Buttons */
+/* Action Buttons */
 .stButton button,
 .stFormSubmitButton button {
     background: linear-gradient(135deg, #2563eb 0%, #4f46e5 100%);
@@ -231,7 +236,7 @@ div[data-testid="stRadio"] [data-testid="stMarkdownContainer"] p {
 </style>
 """, unsafe_allow_html=True)
 
-# ---------------- HERO HEADER (WITH PYTHON LOGO) ----------------
+# ---------------- HERO HEADER ----------------
 st.markdown("""
 <div class="hero-card">
     <div class="badge-tag">⚡ CODING CHALLENGE FOR JUNIOR PROS</div>
@@ -242,7 +247,7 @@ st.markdown("""
              alt="Python Official Logo">
     </div>
     <h1>Python Star Quiz</h1>
-    <p>Loops, Conditions, Dictionaries, Lists & Functions — Let's check your coding powers!</p>
+    <p>Loops, Conditions, Dictionaries, Lists & Functions — Apni coding skills check karein!</p>
 </div>
 """, unsafe_allow_html=True)
 
@@ -251,30 +256,31 @@ st.markdown("""
 <div class="quiz-meta-bar">
     <div class="meta-item">
         <div class="num">10</div>
-        <div class="label">Questions</div>
+        <div class="label">Questions (प्रश्न)</div>
     </div>
     <div class="meta-item">
         <div class="num">10</div>
-        <div class="label">Total Points</div>
+        <div class="label">Total Points (कुल अंक)</div>
     </div>
     <div class="meta-item">
         <div class="num">Kids & Beginners</div>
-        <div class="label">Level</div>
+        <div class="label">Level (स्तर)</div>
     </div>
 </div>
 """, unsafe_allow_html=True)
 
 # ---------------- STUDENT DETAILS ----------------
 student_name = st.text_input(
-    "Coder Name",
-    placeholder="Type your name here...",
+    "Coder Name / आपका नाम",
+    placeholder="Apna naam yahan likhein (Type your name here)...",
     key="student_name"
 )
 
-# ---------------- QUESTIONS LIST ----------------
+# ---------------- QUESTIONS LIST (BILINGUAL) ----------------
 questions = [
     {
         "q": "What will be the output of this code?",
+        "q_hi": "इस कोड का आउटपुट क्या होगा?",
         "code": "nums = [10, 20, 30]\nprint(nums[1])",
         "options": ["10", "20", "30", "IndexError"],
         "answer": "20",
@@ -282,6 +288,7 @@ questions = [
     },
     {
         "q": "How many times will this `for` loop print 'Python'?",
+        "q_hi": "यह `for` लूप 'Python' कितनी बार प्रिंट करेगा?",
         "code": "for i in range(3):\n    print('Python')",
         "options": ["2 times", "3 times", "4 times", "Infinite"],
         "answer": "3 times",
@@ -289,6 +296,7 @@ questions = [
     },
     {
         "q": "What will this condition print?",
+        "q_hi": "यह condition क्या प्रिंट करेगी?",
         "code": "age = 10\nif age >= 12:\n    print('Teen')\nelse:\n    print('Kid')",
         "options": ["Teen", "Kid", "10", "Error"],
         "answer": "Kid",
@@ -296,6 +304,7 @@ questions = [
     },
     {
         "q": "What value will be printed from this dictionary?",
+        "q_hi": "इस dictionary से कौन-सा मान प्रिंट होगा?",
         "code": "student = {'name': 'Aarav', 'marks': 95}\nprint(student['marks'])",
         "options": ["name", "Aarav", "95", "{'marks': 95}"],
         "answer": "95",
@@ -303,6 +312,7 @@ questions = [
     },
     {
         "q": "What is the output of this function call?",
+        "q_hi": "इस फ़ंक्शन कॉल का आउटपुट क्या होगा?",
         "code": "def add(a, b):\n    return a + b\n\nprint(add(4, 5))",
         "options": ["9", "45", "None", "Error"],
         "answer": "9",
@@ -310,6 +320,7 @@ questions = [
     },
     {
         "q": "What will be printed when this while loop terminates?",
+        "q_hi": "जब यह while loop खत्म होगा तो क्या प्रिंट होगा?",
         "code": "count = 1\nwhile count < 3:\n    count += 1\nprint(count)",
         "options": ["1", "2", "3", "4"],
         "answer": "3",
@@ -317,6 +328,7 @@ questions = [
     },
     {
         "q": "Which method adds a new item to the end of a list?",
+        "q_hi": "list के आखिर में नया आइटम जोड़ने के लिए कौन-सा method इस्तेमाल होता है?",
         "code": "fruits = ['apple', 'banana']\n# Add 'mango' to list",
         "options": ["fruits.add('mango')", "fruits.append('mango')", "fruits.push('mango')", "fruits.insert_end('mango')"],
         "answer": "fruits.append('mango')",
@@ -324,6 +336,7 @@ questions = [
     },
     {
         "q": "What will this dictionary operation display?",
+        "q_hi": "इस dictionary ऑपरेशन का परिणाम क्या होगा?",
         "code": "scores = {'math': 90}\nscores['science'] = 85\nprint(len(scores))",
         "options": ["1", "2", "85", "175"],
         "answer": "2",
@@ -331,6 +344,7 @@ questions = [
     },
     {
         "q": "What will this loop with range() print?",
+        "q_hi": "यह loop क्या आउटपुट देगा?",
         "code": "total = 0\nfor x in [1, 2, 3]:\n    total = total + x\nprint(total)",
         "options": ["3", "5", "6", "123"],
         "answer": "6",
@@ -338,6 +352,7 @@ questions = [
     },
     {
         "q": "What does this function print?",
+        "q_hi": "यह फ़ंक्शन क्या प्रिंट करेगा?",
         "code": "def greet(name='Coder'):\n    print('Hello ' + name)\n\ngreet()",
         "options": ["Hello", "Hello name", "Hello Coder", "Error"],
         "answer": "Hello Coder",
@@ -353,19 +368,19 @@ def show_result_popup(name, score, total_q, answers_map):
     if score >= 9:
         badge_icon = "🏆"
         title = "Python Superstar!"
-        note = "Sensational performance! You have nailed all the core concepts."
+        note = "शानदार प्रदर्शन! आपने सभी ज़रूरी कॉन्सेप्ट्स बहुत अच्छे से सीख लिए हैं।"
     elif score >= 7:
         badge_icon = "🌟"
         title = "Great Job, Young Coder!"
-        note = "Super impressive! With just a bit more practice, you'll be unstoppable."
+        note = "बहुत बढ़िया! थोड़ी और प्रैक्टिस के बाद आप कोडिंग में एक्सपर्ट बन जाएंगे।"
     elif score >= 5:
         badge_icon = "🚀"
         title = "Good Attempt!"
-        note = "You know your basics well! Keep practicing loops and dictionaries."
+        note = "बेसिक कॉन्सेप्ट्स अच्छे हैं! Loops और Dictionaries की थोड़ी और प्रैक्टिस करें।"
     else:
         badge_icon = "💡"
         title = "Keep Practicing!"
-        note = "Don't give up! Go through the review section below to master these questions."
+        note = "हिम्मत मत हारिए! नीचे दिए गए Answer Review को देखकर सही जवाब समझें।"
 
     st.markdown(
         f"""
@@ -382,11 +397,11 @@ def show_result_popup(name, score, total_q, answers_map):
     )
 
     c1, c2 = st.columns(2)
-    c1.metric("Correct Answers", f"{score}")
-    c2.metric("Mistakes", f"{total_q - score}")
+    c1.metric("Correct Answers (सही)", f"{score}")
+    c2.metric("Mistakes (गलत)", f"{total_q - score}")
 
     st.markdown("---")
-    st.markdown("### 🔍 Answer Review")
+    st.markdown("### 🔍 Answer Review (उत्तर की समीक्षा)")
 
     for i, q in enumerate(questions):
         user_choice = answers_map[i]
@@ -394,11 +409,13 @@ def show_result_popup(name, score, total_q, answers_map):
         status = "✅ Correct" if is_correct else "❌ Incorrect"
         
         with st.expander(f"Q{i+1}: {q['topic']} — {status}"):
+            st.markdown(f"**Question:** {q['q']}")
+            st.markdown(f"**प्रश्न:** {q['q_hi']}")
             if q["code"]:
                 st.code(q["code"], language="python")
-            st.markdown(f"**Your Choice:** `{user_choice}`")
+            st.markdown(f"**Your Choice (आपका उत्तर):** `{user_choice}`")
             if not is_correct:
-                st.markdown(f"**Correct Answer:** `{q['answer']}`")
+                st.markdown(f"**Correct Answer (सही उत्तर):** `{q['answer']}`")
 
     if st.button("Close & Continue", use_container_width=True):
         st.rerun()
@@ -412,6 +429,7 @@ with st.form("quiz_form"):
         <div class="q-box">
             <span class="q-badge">Question {i+1} of 10 • {q_data['topic']}</span>
             <div class="q-title">{q_data['q']}</div>
+            <div class="q-title-hindi">{q_data['q_hi']}</div>
         </div>
         """, unsafe_allow_html=True)
 
@@ -432,15 +450,14 @@ with st.form("quiz_form"):
 # ---------------- FORM PROCESSING ----------------
 if submitted:
     if not student_name.strip():
-        st.error("⚠️ Please enter your name at the top before submitting.")
+        st.error("⚠️ Please enter your name at the top before submitting. (कृपया पहले अपना नाम दर्ज करें)")
     elif any(answers[i] is None for i in range(len(questions))):
         unanswered = sum(1 for i in range(len(questions)) if answers[i] is None)
-        st.warning(f"⚠️ You still have {unanswered} question(s) left. Attempt all before finishing!")
+        st.warning(f"⚠️ You still have {unanswered} question(s) left. Attempt all before finishing! (अभी {unanswered} सवाल बाकी हैं)")
     else:
         final_score = sum(1 for i, q in enumerate(questions) if answers[i] == q["answer"])
         if final_score >= 8:
             st.balloons()
-        # Open Modal Dialog Popup
         show_result_popup(student_name.strip(), final_score, len(questions), answers)
 
 # ---------------- FOOTER ----------------
